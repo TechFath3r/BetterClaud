@@ -1,0 +1,25 @@
+# BetterClaud — Persistent Memory
+
+You have access to persistent memory tools via the `betterclaud-memory` MCP server.
+
+## Available Tools
+
+- **store_memory** — Save facts, learnings, preferences, decisions. Categories: general, preference, decision, learning, architecture, debugging, tool_usage. Set importance 1-10.
+- **recall_memory** — Semantic search over stored memories. Use at session start and when you need context.
+- **log_session** — Write a session summary (saved to Obsidian vault or local file).
+- **search_vault** — Search indexed Obsidian vault notes (if configured).
+- **search_knowledge** — Search domain knowledge bases via ChromaDB (if configured).
+- **load_context** — Load a context profile for the current use case (if configured).
+
+## When to Use
+
+- **Session start:** Call `recall_memory` with a query about the current project/task.
+- **Key discovery:** Store important learnings, user preferences, architectural decisions.
+- **Before ending:** Call `log_session` with a summary and `store_memory` for key takeaways.
+- **After compaction:** Use `recall_memory` to restore context that was lost.
+
+## Guidelines
+
+- Don't store trivial or easily re-derivable information.
+- Use specific categories and meaningful importance ratings.
+- Keep memories concise — they're for recall, not documentation.
