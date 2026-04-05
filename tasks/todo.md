@@ -22,9 +22,9 @@ Goal: match the capabilities of CortexReach's memory plugin inside Claude Code.
 **Canonical source algorithms with line refs:** [`references/source-algorithms.md`](../references/source-algorithms.md). Numbers below are pulled from there — verify against source before implementing.
 
 ### Schema changes (do this first — other tasks depend on it)
-- [ ] **Migrate memory schema** — add columns: `tier` (core|working|peripheral), `temporal_type` (static|dynamic), `abstract` (L0, one-line), `overview` (L1, markdown), `confidence` (float), `access_count` (int), `last_accessed_at` (float), `scope` (string). Existing `content` becomes L2.
-- [ ] **Embed-dim validation** — detect on first embed call, assert against schema, fail loud if mismatch
-- [ ] **Alembic-style migration helper** — for users upgrading an existing openclawd install
+- [x] **Migrate memory schema** — add columns: `tier` (core|working|peripheral), `temporal_type` (static|dynamic), `abstract` (L0, one-line), `overview` (L1, markdown), `confidence` (float), `access_count` (int), `last_accessed_at` (float), `scope` (string). Existing `content` becomes L2. *(shipped 0.2.0)*
+- [x] **Embed-dim validation** — detect on first embed call, assert against schema, fail loud if mismatch *(shipped 0.2.0)*
+- [x] **Auto migration in get_or_create_table** — detects schema drift, adds missing columns via LanceDB `add_columns` with SQL defaults. Idempotent, forward-compat. *(shipped 0.2.0)*
 
 ### Retrieval pipeline
 - [ ] **Hybrid retrieval (weighted sum, NOT RRF)** — `fused = 0.7 * vector + 0.3 * bm25`, with exact-match floor: if `bm25 ≥ 0.75`, take `max(fused, bm25 * 0.92)`. Clamp to `[0.1, 1.0]`. LanceDB native FTS for BM25.
