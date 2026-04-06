@@ -14,6 +14,7 @@ import logging
 import time
 from dataclasses import dataclass
 
+from . import config
 from .decay import DecayableMemory, apply_search_boost
 
 logger = logging.getLogger("openclawd")
@@ -157,15 +158,17 @@ def hybrid_recall(
     limit: int = 5,
     where: str = "",
     apply_decay: bool = True,
+    apply_rerank: bool = False,
     now: float | None = None,
 ) -> list[ScoredMemory]:
-    """Run hybrid retrieval: vector + BM25 fusion + optional decay scoring.
+    """Run hybrid retrieval: vector + BM25 fusion + optional rerank + decay.
 
     1. Fetch candidate_pool = max(20, limit*2) from each of vector and FTS
     2. Fuse with weighted sum + BM25 exact-match floor
-    3. Apply decay-engine search boost (if apply_decay)
-    4. Drop below HARD_MIN_SCORE
-    5. Return top `limit` results sorted by final score desc
+    3. Rerank top limit*2 via LLM scoring (if apply_rerank and config enabled)
+    4. Apply decay-engine search boost (if apply_decay)
+    5. Drop below HARD_MIN_SCORE
+    6. Return top `limit` results sorted by final score desc
     """
     if now is None:
         now = time.time()
@@ -181,6 +184,20 @@ def hybrid_recall(
 
     # Fuse
     merged = _fuse(vector_hits, fts_hits)
+
+    # Optional reranking (LLM-based, only on explicit recall, not hook path)
+    if apply_rerank and config.RERANK_ENABLED and merged:
+        from .reranker import rerank as _rerank
+        # Sort by fused score, take top limit*2 for reranking
+        sorted_candidates = sorted(merged.values(), key=lambda r: r["fused_score"], reverse=True)
+        rerank_pool = sorted_candidates[:limit * 2]
+        reranked = _rerank(query_text, rerank_pool)
+        # Rebuild merged dict with updated fused scores
+        for row in reranked:
+            mid = row.get("id")
+            if mid and mid in merged:
+                merged[mid]["fused_score"] = row["fused_score"]
+                merged[mid]["rerank_score"] = row.get("rerank_score")
 
     # Apply decay boost
     results = []

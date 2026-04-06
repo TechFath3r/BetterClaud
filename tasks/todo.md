@@ -29,7 +29,7 @@ Goal: match the capabilities of CortexReach's memory plugin inside Claude Code.
 ### Retrieval pipeline
 - [x] **Hybrid retrieval (weighted sum, NOT RRF)** — `fused = 0.7 * vector + 0.3 * bm25`, with exact-match floor: if `bm25 ≥ 0.75`, take `max(fused, bm25 * 0.92)`. Clamp to `[0.1, 1.0]`. LanceDB native FTS for BM25. *(shipped)*
 - [x] **Candidate pool** — fetch top `max(20, limit*2)` from each of vector and BM25, union, sort by fused score *(shipped)*
-- [ ] **Cross-encoder rerank** — default `bge-reranker-v2-m3` via Ollama (not jina, we're local-only). Rerank `limit*2` candidates. Blend: `0.6*rerank + 0.4*fused`. Hard cutoff at `0.35`.
+- [x] **Cross-encoder rerank** — LLM-based relevance scoring via Ollama (opt-in, OPENCLAWD_RERANK=true). Reranks top `limit*2` candidates. Blend: `0.6*rerank + 0.4*fused`. Only on explicit recall_memory, not hook path. *(shipped)*
 - [ ] **Post-process pipeline order** — `minScore(0.3) → rerank → recency_boost → importance_weight → length_norm → hard_min(0.35) → MMR_diversity → limit`
 - [x] **Composite decay score** — `0.4*recency + 0.3*frequency + 0.3*intrinsic`, applied as multiplier on search score with tier floor. Wired into retriever as `apply_search_boost`. *(shipped)*
 
@@ -65,8 +65,9 @@ Goal: match the capabilities of CortexReach's memory plugin inside Claude Code.
 - [ ] **Default accessible scopes per query** — `["global", "project:<current>", "agent:openclawd"]`
 
 ### Migration & CLI
-- [ ] **`openclawd` CLI** — `doctor`, `list`, `delete`, `export`, `import`, `stats`, `migrate`
-- [ ] **`openclawd doctor`** — check Ollama reachable, embedding dim matches, LanceDB opens, hook wiring present in settings.json
+- [x] **`openclawd` CLI** — `doctor` and `stats` commands. Entry point registered in pyproject.toml. *(shipped)*
+- [x] **`openclawd doctor`** — checks: Ollama reachable, embed model available, embed dim matches, LanceDB opens, memory table status, hooks in settings.json, MCP registered, extractor backend, reranker config. *(shipped)*
+- [ ] **CLI: `list`, `delete`, `export`, `import`, `migrate`** — remaining management commands
 - [ ] **Migration script from memory-lancedb-pro** — read their SQLite + LanceDB, map categories/tiers, import
 - [ ] **Fix hook paths** — hardcoded to `SCRIPT_DIR` in setup.sh, should point at installed venv
 

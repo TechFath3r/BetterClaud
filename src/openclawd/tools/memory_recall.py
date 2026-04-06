@@ -63,6 +63,7 @@ def memory_recall(
         limit=limit,
         where=where,
         apply_decay=True,
+        apply_rerank=True,  # explicit tool call — rerank if enabled
     )
 
     if not results:

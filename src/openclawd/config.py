@@ -49,3 +49,8 @@ CONTEXT_DIR: str = _get_path("OPENCLAWD_CONTEXT_DIR", "")
 EXTRACTOR: str = _get("OPENCLAWD_EXTRACTOR", "auto")
 EXTRACTOR_OLLAMA_MODEL: str = _get("OPENCLAWD_EXTRACTOR_MODEL", "llama3.2")
 EXTRACTOR_MAX_MEMORIES: int = int(_get("OPENCLAWD_EXTRACTOR_MAX_MEMORIES", "5"))
+
+# Reranking (opt-in — adds latency, one LLM call per candidate)
+RERANK_ENABLED: bool = _get("OPENCLAWD_RERANK", "false").lower() in ("true", "1", "yes")
+RERANK_MODEL: str = _get("OPENCLAWD_RERANK_MODEL", "")  # empty = use EXTRACTOR_OLLAMA_MODEL
+RERANK_BLEND: float = float(_get("OPENCLAWD_RERANK_BLEND", "0.6"))  # rerank weight in blend
