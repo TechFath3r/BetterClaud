@@ -76,19 +76,6 @@ Goal: match the capabilities of CortexReach's memory plugin inside Claude Code.
 - [ ] **Hybrid-fusion tests** — verify weighted-sum + bm25 floor edge cases
 - [ ] **End-to-end integration test** — start MCP server via stdio, call tools, verify responses
 
-## Phase 1.5 — Realign with upstream OpenClaw stock
-
-**Insight (2026-04-25):** The original plugins this project ported (`memory-lancedb-pro`, `lossless-claw`) have been absorbed and improved in OpenClaw stock 2026.4.x as `@openclaw/memory-lancedb`, `@openclaw/active-memory`, and the new **REM/DREAMS** reflection-based memory promotion subsystem. OpenClawdCode v0.2.0 was built against the original plugins, so we're now porting from sources that are themselves outdated. Catch up to upstream as the new source-of-truth.
-
-**Source location:** [`openclaw/openclaw`](https://github.com/openclaw/openclaw) on GitHub (MIT-licensed). Bundled extensions on any OpenClaw install live at `/usr/lib/node_modules/openclaw/dist/extensions/{memory-lancedb,active-memory,memory-core,memory-wiki}/`.
-
-- [ ] **Audit** — diff upstream `memory-lancedb`, `active-memory`, `memory-core`, and the REM/DREAMS subsystem against current OpenClawdCode implementation. Capture deltas in `references/upstream-deltas.md`.
-- [ ] **Port retrieval refinements** — fusion weight tweaks, BM25 floor logic, candidate pool sizing if upstream improved them
-- [ ] **Port `active-memory`'s bounded sub-agent pattern** as alternative (or addition) to the current `UserPromptSubmit` injection — bounded cost is preferable to unbounded retrieval at scale
-- [ ] **Port REM / DREAMS subsystem** — periodic reflection promotes "candidate truths" to long-term, writes a `DREAMS.md` ledger. **NEW capability**, not in original plugins. High value for multi-domain Claudia deployments.
-- [ ] **Update `references/source-algorithms.md`** to cite upstream as primary source going forward
-- [ ] Bump version to **0.3.0** once aligned
-
 ## Phase 2 — `lossless-claw` parity (LCM-lite)
 
 Goal: nothing from the conversation is ever truly lost. **Canonical source:** [`references/source-algorithms.md`](../references/source-algorithms.md).

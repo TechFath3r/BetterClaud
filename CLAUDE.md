@@ -4,17 +4,15 @@ Always-on essentials for every task. Supporting docs live in `claude/`.
 
 ## Project
 
-**OpenClawdCode** — persistent memory + context engine for [Claude Code](https://docs.anthropic.com/en/docs/claude-code), delivered as an MCP server plus hooks. Bridges OpenClaw's plugin ecosystem (`memory-lancedb-pro`, `lossless-claw` and their upstream-improved successors) to the `claude-cli` backend where those plugins can't reach. Local-only (LanceDB + Ollama + SQLite). See `README.md` for the full pitch.
+**OpenClawdCode** — persistent memory + context engine for [Claude Code](https://docs.anthropic.com/en/docs/claude-code), delivered as an MCP server plus hooks. Spiritual port of OpenClaw's `memory-lancedb-pro` and `lossless-claw` plugins. Local-only (LanceDB + Ollama + SQLite). See `README.md` for the full vision.
 
 ## What to read
 
 | Task type | Read |
 |---|---|
-| **Picking the project up after a pause** | [`IMPLEMENTATION-PLAN.md`](IMPLEMENTATION-PLAN.md) — current state + immediate next action + roadmap |
 | Any task | This file (always loaded) + `claude/workflow.md` |
 | Writing or modifying code | + `claude/conventions.md` |
 | Touching architecture, schemas, hooks, or MCP surface | + `claude/context.md` |
-| Long-term roadmap | [`tasks/todo.md`](tasks/todo.md) |
 
 ## Repo Layout
 

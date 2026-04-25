@@ -7,7 +7,7 @@
 [![Claude Code](https://img.shields.io/badge/Claude_Code-MCP-blue)](https://docs.anthropic.com/en/docs/claude-code)
 [![LanceDB](https://img.shields.io/badge/LanceDB-Vector_Store-orange)](https://lancedb.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Status: Phase 1 — Working, dogfooded](https://img.shields.io/badge/Status-Phase_1_Working-green.svg)](#contributing)
+[![Status: Early / Community Welcome](https://img.shields.io/badge/Status-Early-yellow.svg)](#contributing)
 
 </div>
 
@@ -15,22 +15,14 @@
 
 ## Why this exists
 
-If you run [OpenClaw](https://github.com/openclaw/openclaw) with the `claude-cli` backend — the typical setup for Anthropic Max plan users who want OpenClaw's multi-channel capabilities without burning API credit — you've hit a hard ceiling: **OpenClaw's plugin ecosystem doesn't bridge through to the claude-cli subprocess.**
+[Claude Code](https://docs.anthropic.com/en/docs/claude-code) is powerful. But it forgets everything between sessions, and when its context window fills up, older messages are lost.
 
-The two plugins many OpenClaw users relied on for memory don't reach Claude Code at all:
+The OpenClaw community built two plugins that fixed this for that agent:
 
 - **[memory-lancedb-pro](https://github.com/CortexReach/memory-lancedb-pro)** — auto-captured long-term memory with hybrid retrieval, cross-encoder rerank, Weibull decay, and per-scope isolation
 - **[lossless-claw](https://github.com/Martian-Engineering/lossless-claw)** — LCM (Lossless Context Management): every message preserved in a SQLite DAG of summaries, with tools to drill back into raw detail on demand
 
-When Claude Code is the inference layer, those plugin-registered tools never reach it. The agent only sees Claude Code's native tools (`Read`, `Write`, `Edit`, `Bash`) — no semantic recall, no auto-injection of relevant memory before each prompt, no compaction safety net.
-
-**OpenClawdCode is the bridge.** It re-implements those plugins' core capabilities as an MCP server plus Claude Code hooks — so Claude Code itself gets persistent memory, automatic context injection, and (planned) lossless context management, regardless of which OpenClaw backend is running. Everything runs locally on one machine. No cloud, no server daemon, no telemetry.
-
-Use it when:
-
-- You run **OpenClaw on the `claude-cli` backend** and miss `memory-lancedb-pro` / `lossless-claw`
-- You're a **standalone Claude Code user** and want persistent memory + auto-injection (OpenClaw not required)
-- You want the **token-efficiency benefits** of hierarchical summarization without giving up Claude Code's native tooling
+**OpenClawdCode is an attempt to bring those same capabilities to Claude Code.** Not a fork, not a replacement — a spiritual port, re-implemented as an MCP server plus Claude Code hooks. Everything runs locally on one machine. No cloud, no server daemon, no telemetry.
 
 ## What it does (and honestly, what it can't)
 
@@ -156,16 +148,13 @@ Compared to running OpenClaw + both plugins:
 
 ## Contributing
 
-**This is an actively-dogfooded project — the maintainer ([@TechFath3r](https://github.com/TechFath3r)) runs OpenClaw on the `claude-cli` backend and uses OpenClawdCode every day to bridge the plugin gap.** That means real bugs get found and fixed by virtue of someone depending on it. It also means the roadmap is driven by actual usage rather than speculation.
-
-If you're in the same boat, your input is the most valuable thing we can get:
+**This project exists because the OpenClaw community lost two plugins they relied on.** If you came from there and miss those capabilities, your input is the most valuable thing we can get:
 
 - What did you rely on `memory-lancedb-pro` for that isn't captured here?
 - What `lossless-claw` feature do you miss the most?
 - What doesn't work on your setup?
-- Are you using a different OpenClaw backend (`anthropic`, `openai`, etc.) and want the same hooks for cross-backend consistency?
 
-Open an issue, start a discussion, or send a PR. Early and rough is fine — this is a working tool that's still finding its shape.
+Open an issue, start a discussion, or send a PR. Early and rough is fine — this is a community port, not a product.
 
 **Roadmap lives in [`tasks/todo.md`](tasks/todo.md).** Pick anything unclaimed.
 
